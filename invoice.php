@@ -35,6 +35,15 @@ require 'templates/header.inc';
             </div>
             <button type="submit">Submit</button>
         </form>
+        <div>
+            <table  class="table">
+                <thead>
+                    <tr><th>Date</th><th>Amount</th></tr>
+                </thead>
+                <tbody id="amounts">
+                </tbody>
+            </table>
+        </div>
     </div>
     <div>
         <div id="pets"></div>
@@ -45,6 +54,7 @@ require 'templates/header.inc';
 <script>
 const day=document.getElementById('day');
 const pets=document.getElementById('pets');
+const ul=document.getElementById('amounts');
 
 function checkInputs() {
     // get the values from the inputs, use trim to remove whitespace
@@ -90,6 +100,20 @@ function checkInputs() {
     }
 }
 
+// Function to add an li item to a ul which exists in the DOM with #amounts
+// This item has been grabbed as ul
+function addItem(day, amount) {
+    const newListItem=document.createElement("tr");
+    const newCellItemDay=document.createElement("td");
+    const newCellItemAmount=document.createElement("td");
+
+    newCellItemDay.textContent = day;
+    newCellItemAmount.textContent = amount;
+    newListItem.appendChild(newCellItemDay);
+    newListItem.appendChild(newCellItemAmount);
+    ul.appendChild(newListItem);
+}
+
 // Logic for when we get rows back from the server
 function handleResponse(responseObject) {
     // Create and add html to page
@@ -130,9 +154,13 @@ function handleResponse(responseObject) {
 
         // Add the string to the DOM
         pets.insertAdjacentHTML('beforeend', htmlString);
-        alert('Total Billed: ' + totalBilled);
+        
+        // alert('Total Billed: ' + totalBilled);
+        // Add the amount to the ul in the DOM
+        addItem(day.value.trim(), totalBilled);
     } else {
-        alert('Thats an empty result!');
+        // alert('Thats an empty result!');
+        addItem(day.value.trim(), 0);
     }
     
 }
